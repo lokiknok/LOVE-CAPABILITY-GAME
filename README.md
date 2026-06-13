@@ -1,4 +1,11 @@
 # LOVE-CAPABILITY-GAME
+<div align="center">
+
+# 💖 Love Compatibility Calculator
+# click here
+[![Play Now](https://img.shields.io/badge/🎮%20Play%20Now-Love%20Game-ff4d6d?style=for-the-badge)](https://lokiknok.github.io/LOVE-CAPABILITY-GAME/)
+
+</div>
 Love Compatibility Calculator  A fun and interactive Love Compatibility Calculator built using HTML, CSS, and JavaScript. Enter two names and discover a compatibility score, relationship status, and an automatically selected romantic gift.
 ❤️ Beautiful modern pink-themed UI
 🎁 Automatic Gift Recommendation System
