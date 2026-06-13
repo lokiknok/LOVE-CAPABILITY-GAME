@@ -81,7 +81,6 @@
             border-color: var(--primary-pink);
         }
 
-        /* Auto-Selected Gift Reveal Layout */
         .gift-reveal-container {
             background: var(--light-pink);
             border: 2px dashed var(--secondary-pink);
@@ -143,7 +142,6 @@
             transform: translateY(0);
         }
 
-        /* Results Styling */
         .result-container {
             margin-top: 2rem;
             display: none;
@@ -181,7 +179,6 @@
             padding: 0 1rem;
         }
 
-        /* Floating Hearts Animation */
         .floating-heart {
             position: absolute;
             color: rgba(255, 77, 109, 0.6);
@@ -190,7 +187,6 @@
             z-index: 1;
         }
 
-        /* Keyframes */
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.15); }
@@ -207,19 +203,14 @@
                 transform: translateY(100vh) scale(0);
                 opacity: 0;
             }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
             100% {
                 transform: translateY(-10vh) scale(1.5);
                 opacity: 0;
             }
         }
 
-        /* Loading Animation */
         .loader {
             display: none;
             margin: 1.5rem auto;
@@ -262,9 +253,8 @@
         </div>
 
         <div class="result-container" id="resultContainer">
-            
             <div class="gift-reveal-container">
-                <div class="gift-reveal-title">🎁Gve the Gift</div>
+                <div class="gift-reveal-title">🎁 Auto-Selected Gift</div>
                 <div class="gift-tag" id="giftDisplay">Evaluating...</div>
             </div>
 
@@ -275,6 +265,40 @@
     </div>
 
     <script>
+        // Completely rewritten sweet and warm message database
+        const messages = {
+            soulmate: [
+                "Two hearts beautifully meant to walk this lifetime together. You fit perfectly beside each other, bringing endless smiles and warmth. Simply magical! ✨🌸",
+                "Your bond is pure poetry written by the stars themselves. You bring out the most beautiful colors in each other's lives. A wonderful, absolute forever love Story. 💫🍃",
+                "An absolute celestial masterpiece of a match. Being together feels just like a cozy dream come true, safe, happy, and boundlessly lovely. 🕊️💎"
+            ],
+            dating: [
+                "Every sweet moment shared between you two whispers promise and charm. There is such an endearing warmth blossoming right here. 🌹🧸",
+                "A truly beautiful chapter is unfolding! Your smiles reflect off each other in the loveliest ways, creating something deeply wonderful. 💕🌙",
+                "Two wonderful souls dancing perfectly to the very same melody. Your mutual care and bright chemistry make everything so sweet. 🌷🍯"
+            ],
+            crush: [
+                "There is a beautiful whisper of affection lingering right beneath the surface. Each little conversation feels like sunshine breaking through. 🍓🎈",
+                "A cute little spark that makes the heart flutter softly. Gentle smiles and lovely daydreams are quietly weaving you closer together. 🥰💌",
+                "The sweetest possibilities are calling out! You have an incredibly gentle, affectionate foundation just waiting to naturally grow. 🌱🧁"
+            ],
+            friend: [
+                "A beautiful, kind-hearted friendship built on trust and wonderful shared smiles. Having each other around makes the days infinitely brighter. 🤗☀️",
+                "Your mutual understanding forms a beautiful, comforting circle of safety and laughter. It's a wonderful connection to cherish. 🍀🍰",
+                "A sweet and dependable bond that always leaves room for a brighter smile. Having this level of care is a wonderful gift. 🌻🎀"
+            ],
+            stranger: [
+                "A fresh slate full of mystery and gentle curiosity! Every single beautiful story in this world started out with just a simple hello. 🗺️🍃",
+                "The paths have softly crossed, leaving a quiet canvas waiting to be filled with wonderful interactions and unexpected sweet moments. 🤍🎨",
+                "A gentle starting point where kind interactions can bloom. Life is beautifully full of sweet surprises just waiting around the corner. ✨🌟"
+            ]
+        };
+
+        function getRandomMessage(tier) {
+            const list = messages[tier];
+            return list[Math.floor(Math.random() * list.length)];
+        }
+
         function calculateLove() {
             const name1 = document.getElementById('name1').value.trim();
             const name2 = document.getElementById('name2').value.trim();
@@ -285,81 +309,91 @@
             const statusDisplay = document.getElementById('statusDisplay');
             const messageDisplay = document.getElementById('messageDisplay');
 
-            // Validation Check
             if (name1 === "" || name2 === "") {
                 alert("Please enter both names! Love requires two people (usually).");
                 return;
             }
 
-            // Clean up view layout for processing
             resultContainer.style.display = 'none';
             loader.style.display = 'block';
 
-            // Background floating heart bursts
             for(let i = 0; i < 10; i++) {
                 createHeart();
             }
 
-            // Calculation delay for suspense mechanics
             setTimeout(() => {
                 loader.style.display = 'none';
                 
-                // Determine base algorithm seed metric
-                const combinedString = (name1 + name2).toLowerCase().replace(/\s/g, "");
-                let sum = 0;
-                for (let i = 0; i < combinedString.length; i++) {
-                    sum += combinedString.charCodeAt(i);
-                }
-                let baseScore = (sum % 101); 
-
-                // Automatic Gift AI Engine Logic
+                let finalScore = 0;
                 let giftText = "";
-                let giftBonus = 0;
+                let isSpecialMatch = false;
 
-                if (baseScore >= 75) {
+                const n1 = name1.toLowerCase().replace(/\s/g, "");
+                const n2 = name2.toLowerCase().replace(/\s/g, "");
+
+                // Catch-all sweet verification for Ruban Kishore/Kishire and Nivetha combinations
+                const checkRuban = (n1.includes("ruban") && (n1.includes("kishore") || n1.includes("kishire")) && n2 === "nivetha");
+                const checkNivetha = (n2.includes("ruban") && (n2.includes("kishore") || n2.includes("kishire")) && n1 === "nivetha");
+
+                if (checkRuban || checkNivetha) {
+                    finalScore = 99;
                     giftText = "Roses 🌹";
-                    giftBonus = 15;
-                } else if (baseScore >= 30) {
-                    giftText = "Chocolate 🍫";
-                    giftBonus = 10;
+                    isSpecialMatch = true;
                 } else {
-                    giftText = "Teddy Bear 🧸";
-                    giftBonus = 5;
+                    const combinedString = n1 + n2;
+                    let sum = 0;
+                    for (let i = 0; i < combinedString.length; i++) {
+                        sum += combinedString.charCodeAt(i);
+                    }
+                    let baseScore = (sum % 101); 
+
+                    let giftBonus = 0;
+                    if (baseScore >= 75) {
+                        giftText = "Roses 🌹";
+                        giftBonus = 15;
+                    } else if (baseScore >= 30) {
+                        giftText = "Chocolate 🍫";
+                        giftBonus = 10;
+                    } else {
+                        giftText = "Teddy Bear 🧸";
+                        giftBonus = 5;
+                    }
+                    
+                    finalScore = Math.min(baseScore + giftBonus, 100);
                 }
 
-                // Add the automatically determined gift modifier
-                let finalScore = Math.min(baseScore + giftBonus, 100);
-
-                // Relationship State Assignments
                 let relationLevel = "";
-                let message = "";
+                let selectedText = "";
 
                 if (finalScore >= 90) {
                     relationLevel = "Soulmate 💍";
-                    message = `🚨 Dynamic Duo Alert! Soulmates confirmed. You two are like peanut butter and jelly, or Netflix and a cozy blanket. Just get married already!`;
+                    selectedText = getRandomMessage('soulmate');
                 } else if (finalScore >= 75) {
                     relationLevel = "Dating 💕";
-                    message = `🔥 The sparks are flying! There is some serious chemistry here. Go send them a text right now, the odds are heavily in your favor!`;
+                    selectedText = getRandomMessage('dating');
                 } else if (finalScore >= 50) {
                     relationLevel = "Crush 😍";
-                    message = `👀 Not bad at all. You have a solid foundation! It could turn into something beautiful, or you might just end up aggressively sending each other memes. Both are good.`;
+                    selectedText = getRandomMessage('crush');
                 } else if (finalScore >= 30) {
                     relationLevel = "Friend 😊";
-                    message = `⚠️ Well, friendship is beautiful! There is a little spark, but you might need to carry a fire extinguisher just in case things get awkward.`;
+                    selectedText = getRandomMessage('friend');
                 } else {
                     relationLevel = "Stranger 😶";
-                    message = `🛑 Yikes. The algorithm suggests ordering takeout for one tonight. On the bright side, you don't have to share your fries! 🍟`;
+                    selectedText = getRandomMessage('stranger');
                 }
 
-                // Apply updates to DOM tree and trigger visualization layout
+                // If it's the special couple match, infuse it with ultra-sweet emojis
+                if (isSpecialMatch) {
+                    selectedText = "💞✨ Ruban and Nivetha share a love that is pure magic. Designed flawlessly for one another, your hearts speak the sweetest language of forever love. 👩‍❤️‍👨💒💍";
+                }
+
                 giftDisplay.innerText = giftText;
                 statusDisplay.innerText = relationLevel;
-                messageDisplay.innerHTML = message;
+                messageDisplay.innerHTML = selectedText;
                 
                 resultContainer.style.display = 'block';
                 animateScore(scoreDisplay, finalScore);
 
-                // High score firework heart emitters
                 if (finalScore >= 75) {
                     let bursts = 0;
                     const interval = setInterval(() => {
@@ -372,7 +406,6 @@
             }, 1500);
         }
 
-        // Animated count-up component
         function animateScore(element, targetScore) {
             let currentScore = 0;
             const duration = 1000; 
@@ -389,12 +422,11 @@
             }, stepTime);
         }
 
-        // Particle heart instantiation factory
         function createHeart() {
             const heart = document.createElement('div');
             heart.classList.add('floating-heart');
             
-            const hearts = ['❤️', '💖', '💝', '💕', '💘'];
+            const hearts = ['❤️', '💖', '💝', '💕', '💘', '🌸', '✨'];
             heart.innerText = hearts[Math.floor(Math.random() * hearts.length)];
             
             heart.style.left = Math.random() * 100 + "vw";
